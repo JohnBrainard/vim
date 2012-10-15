@@ -39,7 +39,11 @@ set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 
-colorscheme solarized
+if has('gui')
+	colorscheme ir_black
+else
+	colorscheme koehler
+end
 
 let mapleader = "-"
 let maplocalleader = "\\"

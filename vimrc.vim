@@ -71,6 +71,11 @@ nnoremap <leader>G :GitGrep<space>
 " Remap 'Search' key to mark all instances only. Use n and N to navigate to results.
 nnoremap * :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 
+
+"CoffeScript plugin...
+au BufRead *.coffee compiler coffee
+" au BufWritePost *.coffee silent CoffeeMakee!
+
 " EasyGrep Settings..........
 " ===========================
 let g:EasyGrepMode=2

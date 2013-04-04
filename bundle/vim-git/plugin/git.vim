@@ -29,6 +29,7 @@ function! GitFileHistory()
 
 	call s:ShowInBuffer(name, content)
 	nmap <buffer> l :call GitShowCommitLog()<CR>
+	nmap <buffer> <CR> :call GitShowCommitLog()<CR>
 endfunction
 
 function! GitGrepSelection()

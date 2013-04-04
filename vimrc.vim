@@ -49,6 +49,7 @@ let mapleader = "-"
 let maplocalleader = "\\"
 
 nnoremap <leader>f :Find<space>
+nnoremap <leader>n :NewScratchBuffer<CR>
 
 " NERDTree....
 nnoremap <leader>E :NERDTreeToggle<CR>
@@ -157,3 +158,12 @@ endfunction
 function! FindSubClasses(filename)
     execute ":Grep \\(implements\\|extends\\) " . a:filename
 endfunction
+
+function! NewScratchBuffer(title)
+	enew
+	setlocal buftype=nofile
+
+	"Allow for quick/easy closing of buffer...
+	map <buffer> q :bdelete<CR>
+endfunction
+command! NewScratchBuffer :call NewScratchBuffer("<args>")

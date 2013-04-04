@@ -32,6 +32,16 @@ function! GitFileHistory()
 	nmap <buffer> <CR> :call GitShowCommitLog()<CR>
 endfunction
 
+function! GitAuthorHistory(author)
+	let cmdstr='git log --pretty=format:"%h | %ad | %s%d [%an]" --graph --date=short --author=' . a:author . ' ' . expand('%')
+	let content = system(cmdstr)
+	let title = 'Git History: ' . a:author
+	let name = s:GetBufferTitle(title)
+
+	call s:ShowInBuffer(name, content)
+	nmap <buffer> l :call GitShowCommitLog()<CR>
+endfunction
+
 function! GitGrepSelection()
 	let text = s:VisualSelection()
 
@@ -85,6 +95,7 @@ nnoremap <leader>gs :call GitStatus()<CR>
 nnoremap <leader>gb :call GitBlame()<CR>
 nnoremap <leader>gh :call GitFileHistory()<CR>
 nnoremap <leader>gd :call GitDiff()<CR>
+vnoremap <leader>gl :call GitShowCommitLog()<CR>
 
 vnoremap <leader>gb :call GitBlameLines()<CR>
 vnoremap <leader>gg :call GitGrepSelection()<CR>
@@ -92,6 +103,7 @@ vnoremap <leader>gg :call GitGrepSelection()<CR>
 command! GitBlame :call GitBlame()
 command! GitDiff :call GitDiff()
 command! GitFileHistory :call GitFileHistory()
+command! GitAuthorHistory :call GitAuthorHistory(<f-args>)
 command! GitStage :!git stage %
 command! GitStatus :call GitStatus()
 command! -nargs=? GitGrep :call GitGrep(<f-args>)

@@ -13,6 +13,8 @@ set cursorline
 set cursorcolumn
 set noswapfile
 
+set nobomb "Disable writing the byte order mark at the beginning of files...
+
 " Pathogen Initialization....
 " ===========================
 runtime bundle/vim-pathogen/autoload/pathogen.vim
@@ -39,17 +41,15 @@ set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 
-if has('gui')
-	colorscheme ir_black
-else
-	colorscheme koehler
-end
+colorscheme koehler
 
 let mapleader = "-"
 let maplocalleader = "\\"
 
 nnoremap <leader>f :Find<space>
 nnoremap <leader>n :NewScratchBuffer<CR>
+
+vnoremap <leader>f gvy :Find<space><ctrl-r>"
 
 " NERDTree....
 nnoremap <leader>E :NERDTreeToggle<CR>

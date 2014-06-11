@@ -1,5 +1,5 @@
 function! GitStatus()
-	call s:ShowInBuffer('Git Status', system('git status'))
+	call s:ShowInBuffer('Git Status', system('git status -s'))
 endfunction
 
 function! GitBlame()
@@ -22,24 +22,40 @@ function! GitDiff()
 	setlocal filetype=diff
 endfunction
 
-function! GitFileHistory()
-	let cmdstr='git log --pretty=format:"%h | %ad | %s%d [%an]" --graph --date=short ' . expand('%')
-	let content = system(cmdstr)
+function! ShowGitHistory(cmd)
 	let name = s:GetBufferTitle('Git History')
+	let content = system(a:cmd)
 
 	call s:ShowInBuffer(name, content)
 	nmap <buffer> l :call GitShowCommitLog()<CR>
 	nmap <buffer> <CR> :call GitShowCommitLog()<CR>
 endfunction
 
+function! GitHistory()
+	let cmdstr='git log --pretty=format:"%h | %ad | %s%d [%an]" --graph --date=short '
+	call ShowGitHistory(cmdstr)
+endfunction
+
+function! GitFileHistory()
+	let cmdstr='git log --pretty=format:"%h | %ad | %s%d [%an]" --graph --date=short ' . expand('%')
+	call ShowGitHistory(cmdstr)
+	"let content = system(cmdstr)
+	"let name = s:GetBufferTitle('Git History')
+
+	"call s:ShowInBuffer(name, content)
+	"nmap <buffer> l :call GitShowCommitLog()<CR>
+	"nmap <buffer> <CR> :call GitShowCommitLog()<CR>
+endfunction
+
 function! GitAuthorHistory(author)
 	let cmdstr='git log --pretty=format:"%h | %ad | %s%d [%an]" --graph --date=short --author=' . a:author . ' ' . expand('%')
-	let content = system(cmdstr)
-	let title = 'Git History: ' . a:author
-	let name = s:GetBufferTitle(title)
+	call ShowGitHistory(cmdstr)
+	"let content = system(cmdstr)
+	"let title = 'Git History: ' . a:author
+	"let name = s:GetBufferTitle(title)
 
-	call s:ShowInBuffer(name, content)
-	nmap <buffer> l :call GitShowCommitLog()<CR>
+	"call s:ShowInBuffer(name, content)
+	"nmap <buffer> l :call GitShowCommitLog()<CR>
 endfunction
 
 function! GitGrepSelection()
@@ -64,6 +80,24 @@ function! GitShowCommitLog()
 
 	call s:ShowInBuffer(name, content)
 	setlocal filetype=diff
+endfunction
+
+"TODO:Load git configuration and parse 'remote.origin.url' value for repository path...
+function! GitShowCommitLogBrowser()
+	let hash = expand("<cword>")
+	let cmdstr = '!open "http://git/Logos/DigitalLibrary/commit/"' . hash
+	silent exec cmdstr
+endfunction
+
+function! GitSearchCommitLog(query)
+	let cmdstr='git log --pretty=format:"%h | %ad | %s%d [%an]" --graph --date=short --grep="' . a:query . '"'
+	let content = system(cmdstr)
+	let name = s:GetBufferTitle('Git Log Search')
+
+	call s:ShowInBuffer(name, content)
+	nmap <buffer> l :call GitShowCommitLog()<CR>
+	nmap <buffer> <CR> :call GitShowCommitLog()<CR>
+	nmap <buffer> o :call GitShowCommitLogBrowser()<CR>
 endfunction
 
 function! s:GetBufferTitle(name)
@@ -91,6 +125,7 @@ function! s:VisualSelection()
   endtry
 endfunction
 
+nnoremap <leader>gS :GitLogSearch<space>"
 nnoremap <leader>gs :call GitStatus()<CR>
 nnoremap <leader>gb :call GitBlame()<CR>
 nnoremap <leader>gh :call GitFileHistory()<CR>
@@ -102,10 +137,12 @@ vnoremap <leader>gg :call GitGrepSelection()<CR>
 
 command! GitBlame :call GitBlame()
 command! GitDiff :call GitDiff()
+command! GitHistory :call GitHistory()
 command! GitFileHistory :call GitFileHistory()
-command! GitAuthorHistory :call GitAuthorHistory(<f-args>)
+command! GitFileAuthorHistory :call GitFileAuthorHistory(<f-args>)
 command! GitStage :!git stage %
 command! GitStatus :call GitStatus()
+command! GitLogSearch :call GitSearchCommitLog(<f-args>)
 command! -nargs=? GitGrep :call GitGrep(<f-args>)
 
 command! -range -nargs=* GitBlame <line1>,<line2> call GitBlameLines()

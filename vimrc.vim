@@ -1,3 +1,10 @@
+" If your user vim directory is something other than ~/.vim, such as
+" $USERPROFILE/_vim  on Windows, include the following:
+" set runtimepath+=$USERPROFILE/_vim
+"
+" Include the following line in ~/.vimrc (or ~/_vimrc on Windows)
+" runtime vimrc.vim
+
 set autoindent
 set smartindent
 set tabstop=4
@@ -18,7 +25,7 @@ set nobomb "Disable writing the byte order mark at the beginning of files...
 " Pathogen Initialization....
 " ===========================
 runtime bundle/vim-pathogen/autoload/pathogen.vim
-call pathogen#infect()
+execute pathogen#infect()
 
 " Not sure I want to default to a given directory now...
 " lcd ~/Code

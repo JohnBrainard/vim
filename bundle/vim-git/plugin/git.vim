@@ -65,7 +65,7 @@ function! GitGrepSelection()
 endfunction
 
 function! GitGrep(text)
-	let cmdstr='git grep --line-number '.a:text
+	let cmdstr='git grep --line-number -i '.a:text
 	let content=system(cmdstr)
 	let name=s:GetBufferTitle('Git Grep')
 
